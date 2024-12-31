@@ -119,6 +119,56 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({
                       handleAttributeChange(textSet.id, attribute, value)
                     }
                   />
+                  <div className="space-y-2">
+                    <Label>Text Alignment</Label>
+                    <div className="flex gap-2">
+                      <Button
+                        variant={
+                          textSet.textAlign === "left" ? "default" : "secondary"
+                        }
+                        onClick={() =>
+                          handleAttributeChange(textSet.id, "textAlign", "left")
+                        }
+                      >
+                        <AlignLeft className="h-4 w-4 mr-2" />
+                        Left
+                      </Button>
+                      <Button
+                        variant={
+                          textSet.textAlign === "center"
+                            ? "default"
+                            : "secondary"
+                        }
+                        onClick={() =>
+                          handleAttributeChange(
+                            textSet.id,
+                            "textAlign",
+                            "center"
+                          )
+                        }
+                      >
+                        <AlignCenter className="h-4 w-4 mr-2" />
+                        Center
+                      </Button>
+                      <Button
+                        variant={
+                          textSet.textAlign === "right"
+                            ? "default"
+                            : "secondary"
+                        }
+                        onClick={() =>
+                          handleAttributeChange(
+                            textSet.id,
+                            "textAlign",
+                            "right"
+                          )
+                        }
+                      >
+                        <AlignRight className="h-4 w-4 mr-2" />
+                        Right
+                      </Button>
+                    </div>
+                  </div>
 
                   <FontFamilyPicker
                     attribute="fontFamily"
@@ -172,8 +222,7 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({
                   <CardTitle>Position Settings</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-
-                <div>
+                  <div>
                     <SliderField
                       attribute="fontSize"
                       label="Text Size"
@@ -186,7 +235,7 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({
                       }
                     />
                   </div>
-                  
+
                   <div>
                     <SliderField
                       attribute="left"
