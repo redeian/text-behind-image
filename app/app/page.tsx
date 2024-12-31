@@ -150,7 +150,7 @@ const Page = () => {
     bgImg.onload = () => {
       // Maintain aspect ratio while fitting to container
       const containerWidth = canvas.parentElement?.clientWidth || canvas.width;
-      const scale = containerWidth / bgImg.width;
+      const scale = (containerWidth / bgImg.width) * 2;
       canvas.width = bgImg.width * scale;
       canvas.height = bgImg.height * scale;
 
@@ -159,7 +159,7 @@ const Page = () => {
 
       textSets.forEach((textSet) => {
         ctx.save();
-        const scaleFactor = 6 * scale;
+        const scaleFactor = scale;
         ctx.font = `${textSet.fontWeight} ${textSet.fontSize * scaleFactor}px ${
           textSet.fontFamily
         }`;
@@ -202,7 +202,7 @@ const Page = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const dataUrl = canvas.toDataURL("image/png");
+    const dataUrl = canvas.toDataURL("image/png", );
     const link = document.createElement("a");
     link.download = "text-behind-image.png";
     link.href = dataUrl;
