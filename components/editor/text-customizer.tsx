@@ -74,7 +74,7 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
                     <div>
                         {activeControl === 'text' && (
                             <InputField
-                                attribute="text"
+                                attribute="textarea"
                                 label="Text"
                                 currentValue={textSet.text}
                                 handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
