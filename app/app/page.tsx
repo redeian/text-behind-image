@@ -163,7 +163,7 @@ const Page = () => {
     setTextSets((prev) => prev.filter((set) => set.id !== id));
   };
 
-  const saveCompositeImage = () => {
+  const renderToCanvas = () => {
     if (!canvasRef.current || !isImageSetupDone) return;
 
     const canvas = canvasRef.current;
@@ -173,16 +173,18 @@ const Page = () => {
     const bgImg = new (window as any).Image();
     bgImg.crossOrigin = "anonymous";
     bgImg.onload = () => {
-      canvas.width = bgImg.width;
-      canvas.height = bgImg.height;
+      // Maintain aspect ratio while fitting to container
+      const containerWidth = canvas.parentElement?.clientWidth || canvas.width;
+      const scale = containerWidth / bgImg.width;
+      canvas.width = bgImg.width * scale;
+      canvas.height = bgImg.height * scale;
 
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
 
       textSets.forEach((textSet) => {
-        ctx.save(); // Save the current state
-        // Add scaling factor to match webpage rendering
-
-        const scaleFactor = 6; // Increased to better match web display
+        ctx.save();
+        const scaleFactor = 6 * scale;
         ctx.font = `${textSet.fontWeight} ${textSet.fontSize * scaleFactor}px ${
           textSet.fontFamily
         }`;
@@ -194,22 +196,18 @@ const Page = () => {
         const x = (canvas.width / 100) * (textSet.left + 50);
         const y = (canvas.height / 100) * (50 - textSet.top);
 
-        // Move the context to the text position and rotate
         ctx.translate(x, y);
-        ctx.rotate((textSet.rotation * Math.PI) / 180); // Convert degrees to radians
+        ctx.rotate((textSet.rotation * Math.PI) / 180);
 
-        // Split text by newlines and render each line separately
         const lines = textSet.text.split('\n');
-        const lineHeight = textSet.fontSize * scaleFactor * 1.2; // Add 20% spacing between lines
-        
-        // Calculate starting Y position based on number of lines
+        const lineHeight = textSet.fontSize * scaleFactor * 1.2;
         const startY = -(lines.length - 1) * lineHeight / 2;
         
         lines.forEach((line, index) => {
           ctx.fillText(line, 0, startY + index * lineHeight);
         });
 
-        ctx.restore(); // Restore the original state
+        ctx.restore();
       });
 
       if (removedBgImageUrl) {
@@ -217,23 +215,28 @@ const Page = () => {
         removedBgImg.crossOrigin = "anonymous";
         removedBgImg.onload = () => {
           ctx.drawImage(removedBgImg, 0, 0, canvas.width, canvas.height);
-          triggerDownload();
         };
         removedBgImg.src = removedBgImageUrl;
-      } else {
-        triggerDownload();
       }
     };
     bgImg.src = selectedImage || "";
-
-    function triggerDownload() {
-      const dataUrl = canvas.toDataURL("image/png");
-      const link = document.createElement("a");
-      link.download = "text-behind-image.png";
-      link.href = dataUrl;
-      link.click();
-    }
   };
+
+  const saveCompositeImage = () => {
+    renderToCanvas();
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const dataUrl = canvas.toDataURL("image/png");
+    const link = document.createElement("a");
+    link.download = "text-behind-image.png";
+    link.href = dataUrl;
+    link.click();
+  };
+
+  useEffect(() => {
+    renderToCanvas();
+  }, [selectedImage, isImageSetupDone, textSets, removedBgImageUrl]);
 
   useEffect(() => {
     if (user?.id) {
@@ -247,13 +250,10 @@ const Page = () => {
       {/* user && session && session.user && currentUser */}
       {currentUser ? (
         <div className="flex flex-col h-screen">
-          {/* <div className="ml-6">
-            <RandomColorAd />
-          </div> */}
           <header className="flex flex-row items-center justify-between p-5 px-10">
             <h2 className="text-4xl md:text-2xl font-semibold tracking-tight">
-              <span className="block md:hidden">TBI</span>
-              <span className="hidden md:block">Text behind image editor</span>
+              <span className="block md:hidden">Card</span>
+              <span className="hidden md:block">Card Editor</span>
             </h2>
             <div className="flex gap-4 items-center">
               <input
@@ -327,7 +327,7 @@ const Page = () => {
           {selectedImage ? (
             <div className="flex flex-col md:flex-row items-start justify-start gap-10 w-full h-screen px-10 mt-2">
               <div className="flex flex-col items-start justify-start w-full md:w-1/2 gap-4">
-                <canvas ref={canvasRef} style={{ display: "none" }} />
+                <canvas ref={canvasRef} style={{ width: "100%", maxWidth: "800px", height: "auto", border: "1px solid #ccc", margin: "0 auto" }} />
                 <div className="flex items-center gap-2">
                   <Button onClick={saveCompositeImage} className="md:hidden">
                     Save image
@@ -351,50 +351,23 @@ const Page = () => {
                     )}
                   </div>
                 </div>
-                <div className="min-h-[400px] w-[80%] p-4 border border-border rounded-lg relative overflow-hidden">
-                  {isImageSetupDone ? (
-                    <Image
-                      src={selectedImage}
-                      alt="Uploaded"
-                      layout="fill"
-                      objectFit="contain"
-                      objectPosition="center"
-                    />
-                  ) : (
+                <div className="">
+                  {!isImageSetupDone? (
                     <span className="flex items-center w-full gap-2">
-                      <ReloadIcon className="animate-spin" /> Loading, please
-                      wait
+                      <ReloadIcon className="animate-spin" /> Loading, please wait...
                     </span>
-                  )}
-                  {isImageSetupDone &&
-                    textSets.map((textSet) => (
-                      <div
-                        key={textSet.id}
-                        style={{
-                          position: "absolute",
-                          top: `${50 - textSet.top}%`,
-                          left: `${textSet.left + 50}%`,
-                          transform: `translate(-50%, -50%) rotate(${textSet.rotation}deg)`,
-                          color: textSet.color,
-                          textAlign: "center",
-                          fontSize: `${textSet.fontSize}px`,
-                          fontWeight: textSet.fontWeight,
-                          fontFamily: textSet.fontFamily,
-                          opacity: textSet.opacity,
-                        }}
+                  ): (
+                    <div className="flex gap-2">
+                    <Button className="flex flex-grow" onClick={handleUploadImage}>Upload New Image</Button>
+                    {selectedImage && (
+                      <Button
+                        onClick={saveCompositeImage}
+                        className="flex flex-grow"
                       >
-                        {textSet.text}
-                      </div>
-                    ))}
-                  {removedBgImageUrl && (
-                    <Image
-                      src={removedBgImageUrl}
-                      alt="Removed bg"
-                      layout="fill"
-                      objectFit="contain"
-                      objectPosition="center"
-                      className="absolute top-0 left-0 w-full h-full"
-                    />
+                        Save image
+                      </Button>
+                    )}
+                  </div>
                   )}
                 </div>
                 {/* <AppAds /> */}
