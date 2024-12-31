@@ -1,6 +1,9 @@
 import * as React from "react"
+import { ChevronDown } from "lucide-react"
 
-import { cn } from "@/lib/utils"
+function cn(...classes: (string | undefined | boolean)[]) {
+  return classes.filter(Boolean).join(' ')
+}
 
 const Card = React.forwardRef<
   HTMLDivElement,
@@ -76,4 +79,49 @@ const CardFooter = React.forwardRef<
 ))
 CardFooter.displayName = "CardFooter"
 
-export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }
+const CollapsableCard = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement> & {
+    trigger: React.ReactNode
+  }
+>(({ className, trigger, children, ...props }, ref) => {
+  const [isOpen, setIsOpen] = React.useState(false)
+
+  return (
+    <Card
+      ref={ref}
+      className={cn("cursor-pointer", className)}
+      onClick={() => setIsOpen(!isOpen)}
+      {...props}
+    >
+      <div className="flex items-center justify-between">
+        {trigger}
+        <ChevronDown
+          className={cn(
+            "h-4 w-4 transition-transform duration-200",
+            isOpen && "rotate-180"
+          )}
+        />
+      </div>
+      <div
+        className={cn(
+          "overflow-hidden transition-all",
+          isOpen ? "max-h-[1000px]" : "max-h-0"
+        )}
+      >
+        {children}
+      </div>
+    </Card>
+  )
+})
+CollapsableCard.displayName = "CollapsableCard"
+
+export {
+  Card,
+  CardHeader,
+  CardFooter,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CollapsableCard,
+}

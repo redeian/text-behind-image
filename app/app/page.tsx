@@ -303,7 +303,7 @@ const Page = () => {
               </div>
               <div className="flex flex-col w-full md:w-1/2">
                 <Button variant={"secondary"} onClick={addNewTextSet}>
-                  <PlusIcon className="mr-2" /> Add New Text Set
+                  <PlusIcon className="mr-2" /> Add New Texts
                 </Button>
                 <ScrollArea className="h-[calc(100vh-10rem)] p-2">
                   <Accordion type="single" collapsible className="w-full mt-2">

@@ -9,7 +9,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-import { Move, Text, Bold, RotateCw, Palette, LightbulbIcon, CaseSensitive, TypeOutline, Trash2, Copy } from 'lucide-react';
+import { Move, Text, Bold, RotateCw, Palette, LightbulbIcon, CaseSensitive, TypeOutline, Trash2, Copy, AlignLeft, AlignCenter, AlignRight } from 'lucide-react';
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
@@ -271,6 +271,32 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
                                 currentColor={textSet.color}
                                 handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
                             />
+                                                        <div className="space-y-2">
+                                <Label>Text Alignment</Label>
+                                <div className="flex gap-2">
+                                    <Button
+                                        variant={textSet.textAlign === 'left' ? 'default' : 'secondary'}
+                                        onClick={() => handleAttributeChange(textSet.id, 'textAlign', 'left')}
+                                    >
+                                        <AlignLeft className="h-4 w-4 mr-2" />
+                                        Left
+                                    </Button>
+                                    <Button
+                                        variant={textSet.textAlign === 'center' ? 'default' : 'secondary'}
+                                        onClick={() => handleAttributeChange(textSet.id, 'textAlign', 'center')}
+                                    >
+                                        <AlignCenter className="h-4 w-4 mr-2" />
+                                        Center
+                                    </Button>
+                                    <Button
+                                        variant={textSet.textAlign === 'right' ? 'default' : 'secondary'}
+                                        onClick={() => handleAttributeChange(textSet.id, 'textAlign', 'right')}
+                                    >
+                                        <AlignRight className="h-4 w-4 mr-2" />
+                                        Right
+                                    </Button>
+                                </div>
+                            </div>
                             <div>
                                 <SliderField
                                     attribute="fontSize"
@@ -304,6 +330,7 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
                                     handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
                                 />
                             </div>
+
                         </CardContent>
                     </Card>
 
@@ -348,29 +375,7 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
                                     handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
                                 />
                             </div>
-                            <div className="space-y-2">
-                                <Label>Text Alignment</Label>
-                                <div className="flex gap-2">
-                                    <Button
-                                        variant={textSet.textAlign === 'left' ? 'default' : 'secondary'}
-                                        onClick={() => handleAttributeChange(textSet.id, 'textAlign', 'left')}
-                                    >
-                                        Left
-                                    </Button>
-                                    <Button
-                                        variant={textSet.textAlign === 'center' ? 'default' : 'secondary'}
-                                        onClick={() => handleAttributeChange(textSet.id, 'textAlign', 'center')}
-                                    >
-                                        Center
-                                    </Button>
-                                    <Button
-                                        variant={textSet.textAlign === 'right' ? 'default' : 'secondary'}
-                                        onClick={() => handleAttributeChange(textSet.id, 'textAlign', 'right')}
-                                    >
-                                        Right
-                                    </Button>
-                                </div>
-                            </div>
+
                         </CardContent>
                     </Card>
                 </div>
