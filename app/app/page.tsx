@@ -61,6 +61,9 @@ const Page = () => {
     //         .select('*')
     //         .eq('id', userId)
 
+
+    //         console.log(profile)
+
     //     if (error) {
     //         throw error;
     //     }
@@ -74,12 +77,12 @@ const Page = () => {
 
     setCurrentUser({
       id: "0",
-      username: "redeian",
-      full_name: "mark wang",
+      username: "visiter",
+      full_name: "visiter",
       avatar_url: "",
       images_generated: 0,
-      paid: false,
-      subscription_id: "idddd",
+      paid: true,
+      subscription_id: "0",
     });
   };
 
@@ -423,12 +426,12 @@ const Page = () => {
               </h2>
             </div>
           )}
-          <PayDialog
+          {/* <PayDialog
             userDetails={currentUser as any}
             userEmail={user.user_metadata.email}
             isOpen={isPayDialogOpen}
             onClose={() => setIsPayDialogOpen(false)}
-          />
+          /> */}
         </div>
       ) : (
         <Authenticate />
