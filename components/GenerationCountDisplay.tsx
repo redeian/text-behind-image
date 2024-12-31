@@ -18,7 +18,7 @@ export const GenerationCountDisplay = ({
   return (
     <div className={`font-semibold ${className}`}>
       {paid ? (
-        <p className="text-sm">Unlimited generations</p>
+        <p className="text-sm"></p>
       ) : (
         <div className="flex items-center gap-2">
           <p className="text-sm">

@@ -48,18 +48,22 @@ const Page = () => {
   });
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isImageSetupDone, setIsImageSetupDone] = useState(false);
-  const [removedBgImageUrl, setRemovedBgImageUrl] = useState<string | null>(null);
+  const [removedBgImageUrl, setRemovedBgImageUrl] = useState<string | null>(
+    null
+  );
   const [textSets, setTextSets] = useState<Array<any>>([]);
   const [isPayDialogOpen, setIsPayDialogOpen] = useState(false);
   const [isAdjusted, setIsAdjusted] = useState(false);
-  const [originalImageData, setOriginalImageData] = useState<ImageData | null>(null);
+  const [originalImageData, setOriginalImageData] = useState<ImageData | null>(
+    null
+  );
   const fileInputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const getCurrentUser = async (userId: string) => {
-    setCurrentUser(prev => ({
+    setCurrentUser((prev) => ({
       ...prev,
-      id: userId
+      id: userId,
     }));
   };
 
@@ -121,7 +125,7 @@ const Page = () => {
         shadowColor: "rgba(0, 0, 0, 0.8)",
         shadowSize: 4,
         rotation: 0,
-        textAlign: 'center',
+        textAlign: "center",
       },
     ]);
   };
@@ -150,25 +154,24 @@ const Page = () => {
     for (let i = 0; i < data.length; i += 4) {
       // Adjust brightness
       data[i] = Math.min(255, data[i] * brightness);
-      data[i+1] = Math.min(255, data[i+1] * brightness);
-      data[i+2] = Math.min(255, data[i+2] * brightness);
+      data[i + 1] = Math.min(255, data[i + 1] * brightness);
+      data[i + 2] = Math.min(255, data[i + 2] * brightness);
 
       // Adjust contrast
-      data[i] = Math.min(255, ((data[i] - 128) * contrast) + 128);
-      data[i+1] = Math.min(255, ((data[i+1] - 128) * contrast) + 128);
-      data[i+2] = Math.min(255, ((data[i+2] - 128) * contrast) + 128);
+      data[i] = Math.min(255, (data[i] - 128) * contrast + 128);
+      data[i + 1] = Math.min(255, (data[i + 1] - 128) * contrast + 128);
+      data[i + 2] = Math.min(255, (data[i + 2] - 128) * contrast + 128);
 
       // Adjust saturation
-      const gray = 0.2989 * data[i] + 0.5870 * data[i+1] + 0.1140 * data[i+2];
+      const gray = 0.2989 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
       data[i] = Math.min(255, gray + (data[i] - gray) * saturation);
-      data[i+1] = Math.min(255, gray + (data[i+1] - gray) * saturation);
-      data[i+2] = Math.min(255, gray + (data[i+2] - gray) * saturation);
+      data[i + 1] = Math.min(255, gray + (data[i + 1] - gray) * saturation);
+      data[i + 2] = Math.min(255, gray + (data[i + 2] - gray) * saturation);
     }
     return imageData;
   };
 
   const renderToCanvas = () => {
-
     if (!canvasRef.current || !isImageSetupDone) return;
 
     const canvas = canvasRef.current;
@@ -186,13 +189,13 @@ const Page = () => {
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
-      
+
       // Get/save original image data
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
       if (!originalImageData) {
         setOriginalImageData(imageData);
       }
-      
+
       // Apply color adjustments
       const adjustedData = adjustImageColors(imageData, isAdjusted);
       ctx.putImageData(adjustedData, 0, 0);
@@ -214,10 +217,10 @@ const Page = () => {
         ctx.translate(x, y);
         ctx.rotate((textSet.rotation * Math.PI) / 180);
 
-        const lines = textSet.text.split('\n');
+        const lines = textSet.text.split("\n");
         const lineHeight = textSet.fontSize * scaleFactor * 1.2;
-        const startY = -(lines.length - 1) * lineHeight / 2;
-        
+        const startY = (-(lines.length - 1) * lineHeight) / 2;
+
         lines.forEach((line, index) => {
           ctx.fillText(line, 0, startY + index * lineHeight);
         });
@@ -242,7 +245,7 @@ const Page = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const dataUrl = canvas.toDataURL("image/png", );
+    const dataUrl = canvas.toDataURL("image/png");
     const link = document.createElement("a");
     link.download = "text-behind-image.png";
     link.href = dataUrl;
@@ -251,7 +254,13 @@ const Page = () => {
 
   useEffect(() => {
     renderToCanvas();
-  }, [selectedImage, isImageSetupDone, textSets, removedBgImageUrl, isAdjusted]);
+  }, [
+    selectedImage,
+    isImageSetupDone,
+    textSets,
+    removedBgImageUrl,
+    isAdjusted,
+  ]);
 
   useEffect(() => {
     if (user?.id) {
@@ -265,8 +274,8 @@ const Page = () => {
         <div className="flex flex-col h-screen">
           <header className="flex flex-row items-center justify-between p-5 px-10">
             <h2 className="text-4xl md:text-2xl font-semibold tracking-tight">
-              <span className="block md:hidden">TBE</span>
-              <span className="hidden md:block">Text Behind Editor</span>
+              <span className="block md:hidden">TPC</span>
+              <span className="hidden md:block">New Year PopUp Card</span>
             </h2>
             <div className="flex gap-4 items-center">
               <input
@@ -277,14 +286,14 @@ const Page = () => {
                 accept=".jpg, .jpeg, .png"
               />
               <div className="flex items-center gap-5">
-                <GenerationCountDisplay 
+                <GenerationCountDisplay
                   paid={currentUser.paid}
                   generationsLeft={2 - currentUser.images_generated}
                   onUpgrade={() => setIsPayDialogOpen(true)}
                   className="hidden md:block"
                 />
                 <div className="flex gap-2">
-                  <ImageActionButton 
+                  <ImageActionButton
                     onClick={handleUploadImage}
                     label="Upload image"
                   />
@@ -304,7 +313,16 @@ const Page = () => {
           {selectedImage ? (
             <div className="flex flex-col md:flex-row items-start justify-start gap-10 w-full h-screen px-10 mt-2">
               <div className="flex flex-col items-start justify-start w-full md:w-1/2 gap-4">
-                <canvas ref={canvasRef} style={{ width: "100%", maxWidth: "800px", height: "auto", border: "1px solid #ccc", margin: "0 auto" }} />
+                <canvas
+                  ref={canvasRef}
+                  style={{
+                    width: "100%",
+                    maxWidth: "800px",
+                    height: "auto",
+                    border: "1px solid #ccc",
+                    margin: "0 auto",
+                  }}
+                />
                 <div className="flex items-center gap-2">
                   <ImageActionButton
                     onClick={saveCompositeImage}
@@ -321,48 +339,66 @@ const Page = () => {
                 <div className="">
                   {!isImageSetupDone && (
                     <span className="flex items-center w-full gap-2">
-                      <ReloadIcon className="animate-spin" /> Loading, please wait...
+                      <ReloadIcon className="animate-spin" /> Loading, please
+                      wait...
                     </span>
                   )}
                 </div>
               </div>
               <div className="flex flex-col w-full md:w-1/2">
-              <ImageActionButton className={isAdjusted ? "bg-gradient-to-r from-yellow-400 to-yellow-600 mb-3" : "mb-3"}
-                    onClick={() => {
-                      setIsAdjusted(!isAdjusted);
-                    }}
-                    label={isAdjusted ? "Remove NewYear Filter" : "Add NewYear Filter"}
-                  />
-                <Button variant={"secondary"} onClick={addNewTextSet}>
-                  <PlusIcon className="mr-2" /> Add New Texts
-                </Button>
-                <ScrollArea className="h-[calc(100vh-10rem)] p-2">
-                  <Accordion type="single" collapsible className="w-full mt-2">
-                    {textSets.map((textSet) => (
-                      <TextCustomizer
-                        key={textSet.id}
-                        textSet={textSet}
-                        handleAttributeChange={handleAttributeChange}
-                        removeTextSet={removeTextSet}
-                        duplicateTextSet={duplicateTextSet}
-                        userId={currentUser.id}
-                      />
-                    ))}
-                  </Accordion>
-                </ScrollArea>
+                {isImageSetupDone && (
+                  <>
+                    <ImageActionButton
+                      className={
+                        isAdjusted
+                          ? "bg-gradient-to-r from-yellow-400 to-yellow-600 mb-3"
+                          : "mb-3"
+                      }
+                      onClick={() => {
+                        setIsAdjusted(!isAdjusted);
+                      }}
+                      label={
+                        isAdjusted
+                          ? "Remove NewYear Filter"
+                          : "Add NewYear Filter"
+                      }
+                    />
+                    <Button variant={"secondary"} onClick={addNewTextSet}>
+                      <PlusIcon className="mr-2" /> Add New Texts
+                    </Button>
+                    <ScrollArea className="h-[calc(100vh-10rem)] p-2">
+                      <Accordion
+                        type="single"
+                        collapsible
+                        className="w-full mt-2"
+                      >
+                        {textSets.map((textSet) => (
+                          <TextCustomizer
+                            key={textSet.id}
+                            textSet={textSet}
+                            handleAttributeChange={handleAttributeChange}
+                            removeTextSet={removeTextSet}
+                            duplicateTextSet={duplicateTextSet}
+                            userId={currentUser.id}
+                          />
+                        ))}
+                      </Accordion>
+                    </ScrollArea>{" "}
+                  </>
+                )}
               </div>
             </div>
           ) : (
             <div className="flex flex-col gap-3 items-center justify-center min-h-screen w-full">
-              <Image className="flex" src="/moodang.png" alt="empty" width={300} height={300} />
+              {/* <Image className="flex" src="/moodang.png" alt="empty" width={300} height={300} /> */}
               <h2 className="flex text-xl font-semibold">
                 Uploading Your Photo!
               </h2>
-              <ImageActionButton 
-              className="flex"
-                    onClick={handleUploadImage}
-                    label="Upload image"
-                  />
+              <ImageActionButton
+                className="flex"
+                onClick={handleUploadImage}
+                label="Upload image"
+              />
             </div>
           )}
         </div>

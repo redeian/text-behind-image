@@ -12,8 +12,8 @@ import { ThemeProvider } from "@/components/theme-provider";
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: "Text Behind Image",
-  description: "Create text behind image designs",
+  title: "New Year Pop Up Card Generator",
+  description: "Create a New Year Pop Up Card Generator",
 };
 
 export default function RootLayout({
