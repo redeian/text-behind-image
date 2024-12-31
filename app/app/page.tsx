@@ -43,22 +43,33 @@ const Page = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     const getCurrentUser = async (userId: string) => {
-        try {
-            const { data: profile, error } = await supabaseClient
-                .from('profiles')
-                .select('*')
-                .eq('id', userId)
+        // try {
+        //     const { data: profile, error } = await supabaseClient
+        //         .from('profiles')
+        //         .select('*')
+        //         .eq('id', userId)
 
-            if (error) {
-                throw error;
-            }
+        //     if (error) {
+        //         throw error;
+        //     }
 
-            if (profile) {
-                setCurrentUser(profile[0]);
-            }
-        } catch (error) {
-            console.error('Error fetching user profile:', error);
-        }
+        //     if (profile) {
+        //         setCurrentUser(profile[0]);
+        //     }
+        // } catch (error) {
+        //     console.error('Error fetching user profile:', error);
+        // }
+
+        setCurrentUser({
+            "id" : 0,
+            "username" : 'redeian',
+            "full_name" : 'mar wang',
+            "avatar_url": '',
+            "images_generated": '',
+            "paid": false,
+            "subscription_id": 'idddd'
+        })
+
     };
 
     const handleUploadImage = () => {
@@ -88,13 +99,13 @@ const Page = () => {
             setRemovedBgImageUrl(url);
             setIsImageSetupDone(true);
 
-            if (currentUser) {
-                await supabaseClient
-                    .from('profiles')
-                    .update({ images_generated: currentUser.images_generated + 1 })
-                    .eq('id', currentUser.id) 
-                    .select();
-            }
+            // if (currentUser) {
+            //     await supabaseClient
+            //         .from('profiles')
+            //         .update({ images_generated: currentUser.images_generated + 1 })
+            //         .eq('id', currentUser.id) 
+            //         .select();
+            // }
             
         } catch (error) {
             console.error(error);
@@ -198,8 +209,9 @@ const Page = () => {
     
     return (
         <>
-            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1609710199882100" crossOrigin="anonymous"></script>
-            {user && session && session.user && currentUser ? (
+            {/* <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1609710199882100" crossOrigin="anonymous"></script> */}
+            {/* user && session && session.user && currentUser */}
+            {currentUser ? (
                 <div className='flex flex-col h-screen'>
                     <div className="ml-6">
                         <RandomColorAd />
@@ -344,7 +356,7 @@ const Page = () => {
                                         /> 
                                     )}
                                 </div>
-                                <AppAds />
+                                {/* <AppAds /> */}
                             </div>
                             <div className='flex flex-col w-full md:w-1/2'>
                                 <Button variant={'secondary'} onClick={addNewTextSet}><PlusIcon className='mr-2'/> Add New Text Set</Button>
