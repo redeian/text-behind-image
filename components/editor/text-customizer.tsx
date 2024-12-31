@@ -11,6 +11,10 @@ import {
 } from "@/components/ui/accordion"
 import { Move, Text, Bold, RotateCw, Palette, LightbulbIcon, CaseSensitive, TypeOutline } from 'lucide-react';
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Label } from "@/components/ui/label"
+import { Separator } from "@/components/ui/separator"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 interface TextCustomizerProps {
     textSet: {
@@ -53,54 +57,262 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
             <AccordionContent>
                 {/* Mobile Controls */}
                 <div className="md:hidden">
-                    <ScrollArea className="w-full">
-                        <div className="flex w-max gap-1 mb-2 p-1">
+                    <Tabs defaultValue="text" className="w-full">
+                        <TabsList className="grid w-full grid-cols-4 gap-1 mb-2">
                             {controls.map((control) => (
-                                <button
-                                    key={control.id}
-                                    onClick={() => setActiveControl(activeControl === control.id ? null : control.id)}
-                                    className={`flex flex-col items-center justify-center min-w-[4.2rem] h-[4.2rem] rounded-lg ${
-                                        activeControl === control.id ? 'bg-primary text-primary-foreground' : 'bg-secondary'
-                                    }`}
+                                <TabsTrigger 
+                                    key={control.id} 
+                                    value={control.id}
+                                    className="flex flex-col items-center justify-center h-[4.2rem] gap-1"
                                 >
                                     {control.icon}
-                                    <span className="text-xs mt-1">{control.label}</span>
-                                </button>
+                                    <span className="text-xs">{control.label}</span>
+                                </TabsTrigger>
                             ))}
-                        </div>
-                        <ScrollBar orientation="horizontal" />
-                    </ScrollArea>
+                        </TabsList>
 
-                    <div>
-                        {activeControl === 'text' && (
+                        <TabsContent value="text">
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Text Content</CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <InputField
+                                        attribute="textarea"
+                                        label="Text"
+                                        currentValue={textSet.text}
+                                        handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
+                                    />
+                                </CardContent>
+                            </Card>
+                        </TabsContent>
+
+                        <TabsContent value="fontFamily">
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Font Settings</CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <FontFamilyPicker
+                                        attribute="fontFamily"
+                                        currentFont={textSet.fontFamily}
+                                        handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
+                                        userId={userId}
+                                    />
+                                </CardContent>
+                            </Card>
+                        </TabsContent>
+
+                        <TabsContent value="color">
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Color Settings</CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <ColorPicker
+                                        attribute="color"
+                                        label="Text Color"
+                                        currentColor={textSet.color}
+                                        handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
+                                    />
+                                </CardContent>
+                            </Card>
+                        </TabsContent>
+
+                        <TabsContent value="position">
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Position Settings</CardTitle>
+                                </CardHeader>
+                                <CardContent className="space-y-4">
+                                    <div>
+                                        <SliderField
+                                            attribute="left"
+                                            label="X Position"
+                                            min={-200}
+                                            max={200}
+                                            step={1}
+                                            currentValue={textSet.left}
+                                            handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
+                                        />
+                                    </div>
+                                    <div>
+                                        <SliderField
+                                            attribute="top"
+                                            label="Y Position"
+                                            min={-100}
+                                            max={100}
+                                            step={1}
+                                            currentValue={textSet.top}
+                                            handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
+                                        />
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </TabsContent>
+
+                        <TabsContent value="fontSize">
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Size Settings</CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <div>
+                                        <SliderField
+                                            attribute="fontSize"
+                                            label="Text Size"
+                                            min={10}
+                                            max={800}
+                                            step={1}
+                                            currentValue={textSet.fontSize}
+                                            handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
+                                        />
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </TabsContent>
+
+                        <TabsContent value="fontWeight">
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Weight Settings</CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <div>
+                                        <SliderField
+                                            attribute="fontWeight"
+                                            label="Font Weight"
+                                            min={100}
+                                            max={900}
+                                            step={100}
+                                            currentValue={textSet.fontWeight}
+                                            handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
+                                        />
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </TabsContent>
+
+                        <TabsContent value="opacity">
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Opacity Settings</CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <div>
+                                        <SliderField
+                                            attribute="opacity"
+                                            label="Text Opacity"
+                                            min={0}
+                                            max={1}
+                                            step={0.01}
+                                            currentValue={textSet.opacity}
+                                            handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
+                                        />
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </TabsContent>
+
+                        <TabsContent value="rotation">
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Rotation Settings</CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <div>
+                                        <SliderField
+                                            attribute="rotation"
+                                            label="Rotation"
+                                            min={-360}
+                                            max={360}
+                                            step={1}
+                                            currentValue={textSet.rotation}
+                                            handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
+                                        />
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </TabsContent>
+                    </Tabs>
+                </div>
+
+                {/* Desktop Layout */}
+                <div className="hidden md:block space-y-4">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Text Settings</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
                             <InputField
-                                attribute="textarea"
+                                attribute="text"
                                 label="Text"
                                 currentValue={textSet.text}
                                 handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
                             />
-                        )}
-
-                        {activeControl === 'fontFamily' && (
                             <FontFamilyPicker
                                 attribute="fontFamily"
                                 currentFont={textSet.fontFamily}
                                 handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
                                 userId={userId}
                             />
-                        )}
+                        </CardContent>
+                    </Card>
 
-                        {activeControl === 'color' && (
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Appearance Settings</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
                             <ColorPicker
                                 attribute="color"
                                 label="Text Color"
                                 currentColor={textSet.color}
                                 handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
                             />
-                        )}
+                            <div>
+                                <SliderField
+                                    attribute="fontSize"
+                                    label="Text Size"
+                                    min={10}
+                                    max={800}
+                                    step={1}
+                                    currentValue={textSet.fontSize}
+                                    handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
+                                />
+                            </div>
+                            <div>
+                                <SliderField
+                                    attribute="fontWeight"
+                                    label="Font Weight"
+                                    min={100}
+                                    max={900}
+                                    step={100}
+                                    currentValue={textSet.fontWeight}
+                                    handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
+                                />
+                            </div>
+                            <div>
+                                <SliderField
+                                    attribute="opacity"
+                                    label="Text Opacity"
+                                    min={0}
+                                    max={1}
+                                    step={0.01}
+                                    currentValue={textSet.opacity}
+                                    handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
+                                />
+                            </div>
+                        </CardContent>
+                    </Card>
 
-                        {activeControl === 'position' && (
-                            <div className="space-y-4">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Position & Rotation</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div>
+
                                 <SliderField
                                     attribute="left"
                                     label="X Position"
@@ -110,6 +322,9 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
                                     currentValue={textSet.left}
                                     handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
                                 />
+                            </div>
+                            <div>
+
                                 <SliderField
                                     attribute="top"
                                     label="Y Position"
@@ -120,134 +335,20 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
                                     handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
                                 />
                             </div>
-                        )}
-
-                        {activeControl === 'fontSize' && (
-                            <SliderField
-                                attribute="fontSize"
-                                label="Text Size"
-                                min={10}
-                                max={800}
-                                step={1}
-                                currentValue={textSet.fontSize}
-                                handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
-                            />
-                        )}
-
-                        {activeControl === 'fontWeight' && (
-                            <SliderField
-                                attribute="fontWeight"
-                                label="Font Weight"
-                                min={100}
-                                max={900}
-                                step={100}
-                                currentValue={textSet.fontWeight}
-                                handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
-                            />
-                        )}
-
-                        {activeControl === 'opacity' && (
-                            <SliderField
-                                attribute="opacity"
-                                label="Text Opacity"
-                                min={0}
-                                max={1}
-                                step={0.01}
-                                currentValue={textSet.opacity}
-                                handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
-                            />
-                        )}
-
-                        {activeControl === 'rotation' && (
-                            <SliderField
-                                attribute="rotation"
-                                label="Rotation"
-                                min={-360}
-                                max={360}
-                                step={1}
-                                currentValue={textSet.rotation}
-                                handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
-                            />
-                        )}
-                    </div>
-                </div>
-
-                {/* Desktop Layout */}
-                <div className="hidden md:block">
-                    <InputField
-                        attribute="text"
-                        label="Text"
-                        currentValue={textSet.text}
-                        handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
-                    />
-                    <FontFamilyPicker
-                        attribute="fontFamily"
-                        currentFont={textSet.fontFamily}
-                        handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
-                        userId={userId}
-                    />
-                    <div className='flex flex-row items-start justify-start gap-10 w-full'>
-                        <ColorPicker
-                            attribute="color"
-                            label="Text Color"
-                            currentColor={textSet.color}
-                            handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
-                        />
-                    </div>
-                    <SliderField
-                        attribute="left"
-                        label="X Position"
-                        min={-200}
-                        max={200}
-                        step={1}
-                        currentValue={textSet.left}
-                        handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
-                    />
-                    <SliderField
-                        attribute="top"
-                        label="Y Position"
-                        min={-100}
-                        max={100}
-                        step={1}
-                        currentValue={textSet.top}
-                        handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
-                    />
-                    <SliderField
-                        attribute="fontSize"
-                        label="Text Size"
-                        min={10}
-                        max={800}
-                        step={1}
-                        currentValue={textSet.fontSize}
-                        handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
-                    />
-                    <SliderField
-                        attribute="fontWeight"
-                        label="Font Weight"
-                        min={100}
-                        max={900}
-                        step={100}
-                        currentValue={textSet.fontWeight}
-                        handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
-                    />
-                    <SliderField
-                        attribute="opacity"
-                        label="Text Opacity"
-                        min={0}
-                        max={1}
-                        step={0.01}
-                        currentValue={textSet.opacity}
-                        handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
-                    />
-                    <SliderField
-                        attribute="rotation"
-                        label="Rotation"
-                        min={-360}
-                        max={360}
-                        step={1}
-                        currentValue={textSet.rotation}
-                        handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
-                    />
+                            <div>
+                                
+                                <SliderField
+                                    attribute="rotation"
+                                    label="Rotation"
+                                    min={-360}
+                                    max={360}
+                                    step={1}
+                                    currentValue={textSet.rotation}
+                                    handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
+                                />
+                            </div>
+                        </CardContent>
+                    </Card>
                 </div>
 
                 <div className="flex flex-row gap-2 my-8">
