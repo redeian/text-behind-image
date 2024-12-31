@@ -9,7 +9,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-import { Move, Text, Bold, RotateCw, Palette, LightbulbIcon, CaseSensitive, TypeOutline } from 'lucide-react';
+import { Move, Text, Bold, RotateCw, Palette, LightbulbIcon, CaseSensitive, TypeOutline, Trash2, Copy } from 'lucide-react';
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
@@ -376,8 +376,14 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
                 </div>
 
                 <div className="flex flex-row gap-2 my-8">
-                    <Button onClick={() => duplicateTextSet(textSet)}>Duplicate Text Set</Button>
-                    <Button onClick={() => removeTextSet(textSet.id)} variant="destructive">Remove Text Set</Button>
+                    <Button onClick={() => duplicateTextSet(textSet)}>
+                        <Copy className="h-4 w-4" />
+                        <span className="sr-only">Duplicate Text Set</span>
+                    </Button>
+                    <Button onClick={() => removeTextSet(textSet.id)} variant="destructive">
+                        <Trash2 className="h-4 w-4" />
+                        <span className="sr-only">Remove Text Set</span>
+                    </Button>
                 </div>
             </AccordionContent>
         </AccordionItem>
