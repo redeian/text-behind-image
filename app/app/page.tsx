@@ -79,6 +79,10 @@ const Page = () => {
     const file = event.target.files?.[0];
     if (file) {
       const imageUrl = URL.createObjectURL(file);
+      
+      if(removedBgImageUrl) setRemovedBgImageUrl(null);
+      if(isImageSetupDone) setIsImageSetupDone(false);
+
       setSelectedImage(imageUrl);
       await setupImage(imageUrl);
     }
@@ -167,7 +171,7 @@ const Page = () => {
   };
 
   const renderToCanvas = () => {
-    if (!canvasRef.current || !isImageSetupDone) return;
+    if (!canvasRef.current) return;
 
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
@@ -312,7 +316,7 @@ const Page = () => {
                   ref={canvasRef}
                   style={{
                     width: "100%",
-                    maxWidth: "800px",
+                    maxWidth: "400px",
                     height: "auto",
                     border: "1px solid #ccc",
                     margin: "0 auto",
@@ -322,8 +326,7 @@ const Page = () => {
                 <div className="">
                   {!isImageSetupDone && (
                     <span className="flex items-center w-full gap-2">
-                      <ReloadIcon className="animate-spin" /> Loading, please
-                      wait...
+                      <ReloadIcon className="animate-spin" /> AI is processing ...
                     </span>
                   )}
                 </div>
