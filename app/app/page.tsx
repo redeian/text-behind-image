@@ -27,12 +27,7 @@ import { ImageActionButton } from "@/components/ImageActionButton";
 
 import { removeBackground } from "@imgly/background-removal";
 
-import RandomColorAd from "@/ads/randomcolor";
-
 import "@/app/fonts.css";
-import PayDialog from "@/components/pay-dialog";
-import AppAds from "@/components/editor/app-ads";
-import Image from "next/image";
 
 const Page = () => {
   const { user } = useUser();

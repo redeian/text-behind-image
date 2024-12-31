@@ -8,7 +8,7 @@ import { HoverBorderGradient } from '@/components/ui/hover-border-gradient';
 import { HeroParallaxImages } from '@/components/hero-parallax-images';
 import { AdditionalInfo } from '@/components/additional-info';
 import Link from 'next/link';
-import RandomColorAd from '@/ads/randomcolor';
+
 
 const page = () => {
     return ( 
