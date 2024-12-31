@@ -26,7 +26,7 @@ import { GenerationCountDisplay } from "@/components/GenerationCountDisplay";
 import { ImageActionButton } from "@/components/ImageActionButton";
 
 import { removeBackground } from "@imgly/background-removal";
-
+import { motion } from "framer-motion";
 import "@/app/fonts.css";
 
 const Page = () => {
@@ -79,9 +79,10 @@ const Page = () => {
     const file = event.target.files?.[0];
     if (file) {
       const imageUrl = URL.createObjectURL(file);
-      
-      if(removedBgImageUrl) setRemovedBgImageUrl(null);
-      if(isImageSetupDone) setIsImageSetupDone(false);
+
+      //clear previous images
+      if (removedBgImageUrl) setRemovedBgImageUrl(null);
+      if (isImageSetupDone) setIsImageSetupDone(false);
 
       setSelectedImage(imageUrl);
       await setupImage(imageUrl);
@@ -113,12 +114,12 @@ const Page = () => {
       ...prev,
       {
         id: newId,
-        text: "edit",
+        text: "Hello\nWorld",
         fontFamily: "Inter",
         top: 0,
         left: 0,
         color: "white",
-        fontSize: 200,
+        fontSize: 500,
         fontWeight: 800,
         opacity: 1,
         shadowColor: "rgba(0, 0, 0, 0.8)",
@@ -312,64 +313,105 @@ const Page = () => {
           {selectedImage ? (
             <div className="flex flex-col md:flex-row items-start justify-start gap-10 w-full h-screen px-10 mt-2">
               <div className="flex flex-col items-start justify-start w-full md:w-1/2 gap-4">
-                <canvas
-                  ref={canvasRef}
-                  style={{
-                    width: "100%",
-                    maxWidth: "400px",
-                    height: "auto",
-                    border: "1px solid #ccc",
-                    margin: "0 auto",
-                  }}
-                />
-
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: [20, -5, 0] }}
+                  transition={{ duration: 0.5, ease: [0.4, 0.0, 0.2, 1] }}
+                  className="flex"
+                >
+                  <motion.div
+                    style={{
+                      width: "100%",
+                      maxWidth: "400px",
+                      height: "auto",
+                      border: "5px solid #ccc",
+                      margin: "0 auto",
+                    }}
+                    animate={{
+                      borderColor: !isImageSetupDone
+                        ? ["#FF5500", "#00FF99", "#0055FF", "#FF5500"] // Red, Green, Blue, Red
+                        : "#eee",
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: isImageSetupDone ? 0 : Infinity,
+                      repeatType: "mirror",
+                    }}
+                  >
+                    <canvas
+                      ref={canvasRef}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                      }}
+                    />
+                  </motion.div>
+                </motion.div>
                 <div className="">
                   {!isImageSetupDone && (
-                    <span className="flex items-center w-full gap-2">
-                      <ReloadIcon className="animate-spin" /> AI is processing ...
-                    </span>
+                    <motion.span
+                      className="flex items-center w-full gap-2 text-xl"
+                      animate={{
+                        color: ["#FF5500", "#00FF99", "#0055FF", "#FF5500"], // Red, Green, Blue, Red
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        repeatType: "mirror",
+                      }}
+                    >
+                      <ReloadIcon className="animate-spin" /> AI is Processing
+                      ...
+                    </motion.span>
                   )}
                 </div>
               </div>
               <div className="flex flex-col w-full md:w-1/2">
-                {isImageSetupDone && (
+                {selectedImage && (
                   <>
-                    <ImageActionButton
-                      className={
-                        isAdjusted
-                          ? "bg-gradient-to-r from-yellow-400 to-yellow-600 mb-3"
-                          : "mb-3"
-                      }
-                      onClick={() => {
-                        setIsAdjusted(!isAdjusted);
-                      }}
-                      label={
-                        isAdjusted
-                          ? "Remove NewYear Filter"
-                          : "Add NewYear Filter"
-                      }
-                    />
-                    <Button variant={"secondary"} onClick={addNewTextSet}>
-                      <PlusIcon className="mr-2" /> Add New Texts
-                    </Button>
-                    <ScrollArea className="h-[calc(100vh-10rem)] p-2">
-                      <Accordion
-                        type="single"
-                        collapsible
-                        className="w-full mt-2"
-                      >
-                        {textSets.map((textSet) => (
-                          <TextCustomizer
-                            key={textSet.id}
-                            textSet={textSet}
-                            handleAttributeChange={handleAttributeChange}
-                            removeTextSet={removeTextSet}
-                            duplicateTextSet={duplicateTextSet}
-                            userId={currentUser.id}
-                          />
-                        ))}
-                      </Accordion>
-                    </ScrollArea>{" "}
+                    <motion.h1
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: [20, -5, 0] }}
+                      transition={{ duration: 0.5, ease: [0.4, 0.0, 0.2, 1] }}
+                      className="flex flex-col w-full"
+                    >
+                      <ImageActionButton
+                        className={
+                          isAdjusted
+                            ? "bg-gradient-to-r from-yellow-400 to-yellow-600 mb-3"
+                            : "mb-3"
+                        }
+                        onClick={() => {
+                          setIsAdjusted(!isAdjusted);
+                        }}
+                        label={
+                          isAdjusted
+                            ? "Remove NewYear Filter"
+                            : "Add NewYear Filter"
+                        }
+                      />
+                      <Button variant={"secondary"} onClick={addNewTextSet}>
+                        <PlusIcon className="mr-2" /> Add New Texts
+                      </Button>
+                      <ScrollArea className="h-[calc(100vh-10rem)] p-2">
+                        <Accordion
+                          type="single"
+                          collapsible
+                          className="w-full mt-2"
+                        >
+                          {textSets.map((textSet) => (
+                            <TextCustomizer
+                              key={textSet.id}
+                              textSet={textSet}
+                              handleAttributeChange={handleAttributeChange}
+                              removeTextSet={removeTextSet}
+                              duplicateTextSet={duplicateTextSet}
+                              userId={currentUser.id}
+                            />
+                          ))}
+                        </Accordion>
+                      </ScrollArea>
+                    </motion.h1>
                   </>
                 )}
               </div>
