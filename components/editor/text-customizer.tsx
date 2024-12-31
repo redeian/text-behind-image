@@ -30,6 +30,7 @@ interface TextCustomizerProps {
         rotation: number;
         shadowColor: string;
         shadowSize: number;
+        textAlign: string;
     };
     handleAttributeChange: (id: number, attribute: string, value: any) => void;
     removeTextSet: (id: number) => void;
@@ -346,6 +347,29 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
                                     currentValue={textSet.rotation}
                                     handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
                                 />
+                            </div>
+                            <div className="space-y-2">
+                                <Label>Text Alignment</Label>
+                                <div className="flex gap-2">
+                                    <Button
+                                        variant={textSet.textAlign === 'left' ? 'default' : 'secondary'}
+                                        onClick={() => handleAttributeChange(textSet.id, 'textAlign', 'left')}
+                                    >
+                                        Left
+                                    </Button>
+                                    <Button
+                                        variant={textSet.textAlign === 'center' ? 'default' : 'secondary'}
+                                        onClick={() => handleAttributeChange(textSet.id, 'textAlign', 'center')}
+                                    >
+                                        Center
+                                    </Button>
+                                    <Button
+                                        variant={textSet.textAlign === 'right' ? 'default' : 'secondary'}
+                                        onClick={() => handleAttributeChange(textSet.id, 'textAlign', 'right')}
+                                    >
+                                        Right
+                                    </Button>
+                                </div>
                             </div>
                         </CardContent>
                     </Card>
