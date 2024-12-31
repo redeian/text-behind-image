@@ -290,12 +290,12 @@ const Page = () => {
                 <div className="flex gap-2">
                   <ImageActionButton
                     onClick={handleUploadImage}
-                    label="Upload image"
+                    label="Upload"
                   />
                   {selectedImage && (
                     <ImageActionButton
                       onClick={saveCompositeImage}
-                      label="Save image"
+                      label="Save"
                       className="md:flex"
                     />
                   )}
@@ -380,7 +380,7 @@ const Page = () => {
               <ImageActionButton
                 className="flex"
                 onClick={handleUploadImage}
-                label="Upload image"
+                label="Upload"
               />
             </div>
           )}
