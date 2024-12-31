@@ -296,7 +296,7 @@ const Page = () => {
                     <ImageActionButton
                       onClick={saveCompositeImage}
                       label="Save image"
-                      className="hidden md:flex"
+                      className="md:flex"
                     />
                   )}
                 </div>
@@ -318,19 +318,7 @@ const Page = () => {
                     margin: "0 auto",
                   }}
                 />
-                <div className="flex items-center gap-2">
-                  <ImageActionButton
-                    onClick={saveCompositeImage}
-                    label="Save image"
-                    className="md:hidden"
-                  />
-                  <GenerationCountDisplay
-                    paid={currentUser.paid}
-                    generationsLeft={2 - currentUser.images_generated}
-                    onUpgrade={() => setIsPayDialogOpen(true)}
-                    className="block md:hidden"
-                  />
-                </div>
+
                 <div className="">
                   {!isImageSetupDone && (
                     <span className="flex items-center w-full gap-2">

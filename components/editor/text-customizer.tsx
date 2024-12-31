@@ -42,14 +42,8 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
     const [activeControl, setActiveControl] = useState<string | null>(null);
 
     const controls = [
-        { id: 'text', icon: <CaseSensitive size={20} />, label: 'Text' },
-        { id: 'fontFamily', icon: <TypeOutline size={20} />, label: 'Font' },
-        { id: 'color', icon: <Palette size={20} />, label: 'Color' },
+        { id: 'texts', icon: <Text size={20} />, label: 'Texts' },
         { id: 'position', icon: <Move size={20} />, label: 'Position' },
-        { id: 'fontSize', icon: <Text size={20} />, label: 'Size' },
-        { id: 'fontWeight', icon: <Bold size={20} />, label: 'Weight' },
-        { id: 'opacity', icon: <LightbulbIcon size={20} />, label: 'Opacity' },
-        { id: 'rotation', icon: <RotateCw size={20} />, label: 'Rotate' },
     ];
 
     return (
@@ -72,7 +66,7 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
                 {/* Mobile Controls */}
                 <div className="md:hidden">
                     <Tabs defaultValue="text" className="w-full">
-                        <TabsList className="grid w-full grid-cols-4 gap-1 mb-2">
+                        <TabsList className="grid w-full grid-cols-2 gap-1 mb-2">
                             {controls.map((control) => (
                                 <TabsTrigger 
                                     key={control.id} 
@@ -85,50 +79,65 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
                             ))}
                         </TabsList>
 
-                        <TabsContent value="text">
+                        <TabsContent value="texts">
                             <Card>
                                 <CardHeader>
-                                    <CardTitle>Text Content</CardTitle>
+                                    <CardTitle>Text Settings</CardTitle>
                                 </CardHeader>
-                                <CardContent>
-                                    <InputField
-                                        attribute="textarea"
-                                        label="Text"
-                                        currentValue={textSet.text}
-                                        handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
-                                    />
-                                </CardContent>
-                            </Card>
-                        </TabsContent>
+                                <CardContent className="space-y-4">
+                                <InputField
+                                attribute="text"
+                                label="Text"
+                                currentValue={textSet.text}
+                                handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
+                            />
 
-                        <TabsContent value="fontFamily">
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle>Font Settings</CardTitle>
-                                </CardHeader>
-                                <CardContent>
+                                    
                                     <FontFamilyPicker
                                         attribute="fontFamily"
                                         currentFont={textSet.fontFamily}
                                         handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
                                         userId={userId}
                                     />
-                                </CardContent>
-                            </Card>
-                        </TabsContent>
-
-                        <TabsContent value="color">
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle>Color Settings</CardTitle>
-                                </CardHeader>
-                                <CardContent>
                                     <ColorPicker
                                         attribute="color"
                                         label="Text Color"
                                         currentColor={textSet.color}
                                         handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
                                     />
+                                    <div>
+                                        <SliderField
+                                            attribute="fontSize"
+                                            label="Text Size"
+                                            min={10}
+                                            max={800}
+                                            step={1}
+                                            currentValue={textSet.fontSize}
+                                            handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
+                                        />
+                                    </div>
+                                    <div>
+                                        <SliderField
+                                            attribute="fontWeight"
+                                            label="Font Weight"
+                                            min={100}
+                                            max={900}
+                                            step={100}
+                                            currentValue={textSet.fontWeight}
+                                            handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
+                                        />
+                                    </div>
+                                    <div>
+                                        <SliderField
+                                            attribute="opacity"
+                                            label="Text Opacity"
+                                            min={0}
+                                            max={1}
+                                            step={0.01}
+                                            currentValue={textSet.opacity}
+                                            handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
+                                        />
+                                    </div>
                                 </CardContent>
                             </Card>
                         </TabsContent>
@@ -161,79 +170,6 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
                                             handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
                                         />
                                     </div>
-                                </CardContent>
-                            </Card>
-                        </TabsContent>
-
-                        <TabsContent value="fontSize">
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle>Size Settings</CardTitle>
-                                </CardHeader>
-                                <CardContent>
-                                    <div>
-                                        <SliderField
-                                            attribute="fontSize"
-                                            label="Text Size"
-                                            min={10}
-                                            max={800}
-                                            step={1}
-                                            currentValue={textSet.fontSize}
-                                            handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
-                                        />
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        </TabsContent>
-
-                        <TabsContent value="fontWeight">
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle>Weight Settings</CardTitle>
-                                </CardHeader>
-                                <CardContent>
-                                    <div>
-                                        <SliderField
-                                            attribute="fontWeight"
-                                            label="Font Weight"
-                                            min={100}
-                                            max={900}
-                                            step={100}
-                                            currentValue={textSet.fontWeight}
-                                            handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
-                                        />
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        </TabsContent>
-
-                        <TabsContent value="opacity">
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle>Opacity Settings</CardTitle>
-                                </CardHeader>
-                                <CardContent>
-                                    <div>
-                                        <SliderField
-                                            attribute="opacity"
-                                            label="Text Opacity"
-                                            min={0}
-                                            max={1}
-                                            step={0.01}
-                                            currentValue={textSet.opacity}
-                                            handleAttributeChange={(attribute, value) => handleAttributeChange(textSet.id, attribute, value)}
-                                        />
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        </TabsContent>
-
-                        <TabsContent value="rotation">
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle>Rotation Settings</CardTitle>
-                                </CardHeader>
-                                <CardContent>
                                     <div>
                                         <SliderField
                                             attribute="rotation"

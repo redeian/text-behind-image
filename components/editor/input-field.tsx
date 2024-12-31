@@ -27,8 +27,7 @@ const InputField: React.FC<InputFieldProps> = ({
           placeholder='text'
           value={currentValue}
           onChange={handleInputChange}
-          className='mt-2 w-full p-2 border rounded-md min-h-[100px] resize-y'
-          rows={4}
+          className='mt-2 w-full p-1 md:p-2 border rounded-md min-h-[80px] md:min-h-[100px] resize-y overflow-auto'
         />
       </div>
     </>
