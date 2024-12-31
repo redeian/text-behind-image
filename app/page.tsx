@@ -7,14 +7,21 @@ import { HeroImages } from "@/components/hero-images";
 import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 import { HeroParallaxImages } from "@/components/hero-parallax-images";
 import { AdditionalInfo } from "@/components/additional-info";
+import { Fireworks } from "@/components/ui/fireworks";
 import Link from "next/link";
+import Image from "next/image";
 
 const page = () => {
   return (
     <div className="flex flex-col min-h-screen items-center w-full">
       {/* <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1609710199882100" crossOrigin="anonymous"></script> */}
 
+      
+      <Fireworks>
+        <Image src="/banner.png" width="200" height="300" alt="logo" className="mt-10"/>
+      </Fireworks>
       <HeroHighlight>
+        
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: [20, -5, 0] }}
@@ -23,6 +30,7 @@ const page = () => {
         >
           Create a POP-OUT Post Card
         </motion.h1>
+        
       </HeroHighlight>
 
       <div className="text-lg text-center font-semibold mb-4">

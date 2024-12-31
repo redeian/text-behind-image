@@ -28,6 +28,7 @@ import { ImageActionButton } from "@/components/ImageActionButton";
 import { removeBackground } from "@imgly/background-removal";
 import { motion } from "framer-motion";
 import "@/app/fonts.css";
+import Image from "next/image";
 
 const Page = () => {
   const { user } = useUser();
@@ -418,7 +419,7 @@ const Page = () => {
             </div>
           ) : (
             <div className="flex flex-col gap-3 items-center justify-center min-h-screen w-full">
-              {/* <Image className="flex" src="/moodang.png" alt="empty" width={300} height={300} /> */}
+              <Image className="flex" src="/upload.png" alt="empty" width={300} height={300} />
               <h2 className="flex text-xl font-semibold">
                 Uploading Your Photo!
               </h2>
@@ -429,6 +430,13 @@ const Page = () => {
               />
             </div>
           )}
+
+<div className="flex flex-col items-center justify-center my-10">
+        {/* <AdditionalInfo /> */}
+        <div className="text-l m-10">
+          Created by Chatchai Wangwiwattana - 2024 inspired by Rexanwong
+        </div>
+      </div>
         </div>
       ) : (
         <Authenticate />
