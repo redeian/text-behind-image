@@ -32,6 +32,7 @@ import RandomColorAd from "@/ads/randomcolor";
 import "@/app/fonts.css";
 import PayDialog from "@/components/pay-dialog";
 import AppAds from "@/components/editor/app-ads";
+import Image from "next/image";
 
 const Page = () => {
   const { user } = useUser();
@@ -352,10 +353,16 @@ const Page = () => {
               </div>
             </div>
           ) : (
-            <div className="flex items-center justify-center min-h-screen w-full">
-              <h2 className="text-xl font-semibold">
-                Welcome, get started by uploading an image!
+            <div className="flex flex-col gap-3 items-center justify-center min-h-screen w-full">
+              <Image className="flex" src="/moodang.png" alt="empty" width={300} height={300} />
+              <h2 className="flex text-xl font-semibold">
+                Uploading Your Photo!
               </h2>
+              <ImageActionButton 
+              className="flex"
+                    onClick={handleUploadImage}
+                    label="Upload image"
+                  />
             </div>
           )}
         </div>
