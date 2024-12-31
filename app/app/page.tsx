@@ -50,6 +50,8 @@ const Page = () => {
   const [removedBgImageUrl, setRemovedBgImageUrl] = useState<string | null>(null);
   const [textSets, setTextSets] = useState<Array<any>>([]);
   const [isPayDialogOpen, setIsPayDialogOpen] = useState(false);
+  const [isAdjusted, setIsAdjusted] = useState(false);
+  const [originalImageData, setOriginalImageData] = useState<ImageData | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -138,7 +140,34 @@ const Page = () => {
     setTextSets((prev) => prev.filter((set) => set.id !== id));
   };
 
+  const adjustImageColors = (imageData: ImageData, apply: boolean) => {
+    const data = imageData.data;
+    const brightness = apply ? 1.2 : 1;
+    const contrast = apply ? 1.2 : 1;
+    const saturation = apply ? 1.2 : 1;
+
+    for (let i = 0; i < data.length; i += 4) {
+      // Adjust brightness
+      data[i] = Math.min(255, data[i] * brightness);
+      data[i+1] = Math.min(255, data[i+1] * brightness);
+      data[i+2] = Math.min(255, data[i+2] * brightness);
+
+      // Adjust contrast
+      data[i] = Math.min(255, ((data[i] - 128) * contrast) + 128);
+      data[i+1] = Math.min(255, ((data[i+1] - 128) * contrast) + 128);
+      data[i+2] = Math.min(255, ((data[i+2] - 128) * contrast) + 128);
+
+      // Adjust saturation
+      const gray = 0.2989 * data[i] + 0.5870 * data[i+1] + 0.1140 * data[i+2];
+      data[i] = Math.min(255, gray + (data[i] - gray) * saturation);
+      data[i+1] = Math.min(255, gray + (data[i+1] - gray) * saturation);
+      data[i+2] = Math.min(255, gray + (data[i+2] - gray) * saturation);
+    }
+    return imageData;
+  };
+
   const renderToCanvas = () => {
+
     if (!canvasRef.current || !isImageSetupDone) return;
 
     const canvas = canvasRef.current;
@@ -156,6 +185,16 @@ const Page = () => {
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
+      
+      // Get/save original image data
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      if (!originalImageData) {
+        setOriginalImageData(imageData);
+      }
+      
+      // Apply color adjustments
+      const adjustedData = adjustImageColors(imageData, isAdjusted);
+      ctx.putImageData(adjustedData, 0, 0);
 
       textSets.forEach((textSet) => {
         ctx.save();
@@ -211,7 +250,7 @@ const Page = () => {
 
   useEffect(() => {
     renderToCanvas();
-  }, [selectedImage, isImageSetupDone, textSets, removedBgImageUrl]);
+  }, [selectedImage, isImageSetupDone, textSets, removedBgImageUrl, isAdjusted]);
 
   useEffect(() => {
     if (user?.id) {
@@ -225,8 +264,8 @@ const Page = () => {
         <div className="flex flex-col h-screen">
           <header className="flex flex-row items-center justify-between p-5 px-10">
             <h2 className="text-4xl md:text-2xl font-semibold tracking-tight">
-              <span className="block md:hidden">Card</span>
-              <span className="hidden md:block">Card Editor</span>
+              <span className="block md:hidden">TBE</span>
+              <span className="hidden md:block">Text Behind Editor</span>
             </h2>
             <div className="flex gap-4 items-center">
               <input
@@ -279,29 +318,20 @@ const Page = () => {
                   />
                 </div>
                 <div className="">
-                  {!isImageSetupDone? (
+                  {!isImageSetupDone && (
                     <span className="flex items-center w-full gap-2">
                       <ReloadIcon className="animate-spin" /> Loading, please wait...
                     </span>
-                  ): (
-                    <div className="flex gap-2">
-                    <ImageActionButton
-                      onClick={handleUploadImage}
-                      label="Upload New Image"
-                      className="flex flex-grow"
-                    />
-                    {selectedImage && (
-                      <ImageActionButton
-                        onClick={saveCompositeImage}
-                        label="Save image"
-                        className="flex flex-grow"
-                      />
-                    )}
-                  </div>
                   )}
                 </div>
               </div>
               <div className="flex flex-col w-full md:w-1/2">
+              <ImageActionButton className={isAdjusted ? "bg-gradient-to-r from-yellow-400 to-yellow-600 mb-3" : "mb-3"}
+                    onClick={() => {
+                      setIsAdjusted(!isAdjusted);
+                    }}
+                    label={isAdjusted ? "Remove NewYear Filter" : "Add NewYear Filter"}
+                  />
                 <Button variant={"secondary"} onClick={addNewTextSet}>
                   <PlusIcon className="mr-2" /> Add New Texts
                 </Button>

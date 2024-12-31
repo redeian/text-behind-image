@@ -54,7 +54,20 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
 
     return (
         <AccordionItem value={`item-${textSet.id}`}>
-            <AccordionTrigger>{textSet.text}</AccordionTrigger>
+            <AccordionTrigger className="p-2  border-2">{textSet.text}
+
+            <div className="flex flex-row gap-2  w-full justify-end pr-8">
+            <Button onClick={() => removeTextSet(textSet.id)} className="p-2 bg-transparent text-red-500"  >
+                        <Trash2 className="h-4 w-4" />
+                        <span className="sr-only">Remove Text Set</span>
+                    </Button>
+                    <Button onClick={() => duplicateTextSet(textSet)} className="p-2 bg-transparent invert">
+                        <Copy className="h-4 w-4" />
+                        <span className="sr-only">Duplicate Text Set</span>
+                    </Button>
+
+                </div>
+            </AccordionTrigger>
             <AccordionContent>
                 {/* Mobile Controls */}
                 <div className="md:hidden">
@@ -380,16 +393,7 @@ const TextCustomizer: React.FC<TextCustomizerProps> = ({ textSet, handleAttribut
                     </Card>
                 </div>
 
-                <div className="flex flex-row gap-2 my-8">
-                    <Button onClick={() => duplicateTextSet(textSet)}>
-                        <Copy className="h-4 w-4" />
-                        <span className="sr-only">Duplicate Text Set</span>
-                    </Button>
-                    <Button onClick={() => removeTextSet(textSet.id)} variant="destructive">
-                        <Trash2 className="h-4 w-4" />
-                        <span className="sr-only">Remove Text Set</span>
-                    </Button>
-                </div>
+
             </AccordionContent>
         </AccordionItem>
     );
